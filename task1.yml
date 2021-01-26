@@ -1,0 +1,29 @@
+---
+- name: Archive Files
+  hosts: all
+  become: true
+  become_method: sudo
+  become_user: root
+  vars:
+   user:
+    - name: "tony"
+      nodename: "stapp01"
+    - name: "steve"
+      nodename: "stapp02"
+    - name: "banner"
+      nodename: "stapp03"
+  tasks:
+    - name: printing node names
+      debug:
+        var: inventory_hostname
+    - name: creating an Archive
+      archive:
+        path: /usr/src/sysops
+        dest: /opt/sysops/official.tar.gz
+        format: gz
+    - name: changing owner of files on basis of nodename
+      file:
+         path: /opt/sysops/official.tar.gz
+         owner: "{{item.name}}"
+      when: inventory_hostname == item.nodename
+      loop: "{{ user }}"
