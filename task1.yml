@@ -18,12 +18,13 @@
         var: inventory_hostname
     - name: creating an Archive
       archive:
-        path: /usr/src/sysops
-        dest: /opt/sysops/official.tar.gz
+        path: /usr/src/devops
+        dest: /opt/devops/demo.tar.gz
         format: gz
     - name: changing owner of files on basis of nodename
       file:
-         path: /opt/sysops/official.tar.gz
+         path: /opt/devops/demo.tar.gz
          owner: "{{item.name}}"
+         group: "{{item.name}}" 
       when: inventory_hostname == item.nodename
       loop: "{{ user }}"
